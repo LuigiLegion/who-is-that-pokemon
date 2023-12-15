@@ -4,6 +4,7 @@ import { useState, useEffect, useCallback } from 'react';
 // Initializations
 const VOICE_URI_IOS = 'Samantha';
 const VOICE_URI_NON_IOS = 'Zira';
+const WHO_IS_THAT_POKEMON = "Who's that Pokemon?";
 const MAX_NUMBER_OF_POKEMON = 1010;
 
 const synth = window.speechSynthesis;
@@ -35,7 +36,7 @@ const WhoIsThatPokemon = () => {
 
   useEffect(() => {
     handleFetch();
-    handleReadAloud("Who's that Pokemon?");
+    handleReadAloud(WHO_IS_THAT_POKEMON);
   }, []);
 
   const handleFetch = () => {
@@ -62,7 +63,7 @@ const WhoIsThatPokemon = () => {
   const handleGenerate = useCallback(() => {
     setIsHidden(true);
     handleFetch();
-    handleReadAloud("Who's that Pokemon?");
+    handleReadAloud(WHO_IS_THAT_POKEMON);
   }, []);
 
   return (
