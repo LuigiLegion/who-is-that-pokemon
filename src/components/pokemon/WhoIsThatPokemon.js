@@ -37,7 +37,7 @@ const WhoIsThatPokemon = () => {
 
   useEffect(() => {
     handleFetch();
-    audio.play();
+    handleReadAloud("Who's that Pokemon?");
   }, []);
 
   const handleFetch = () => {
@@ -64,7 +64,7 @@ const WhoIsThatPokemon = () => {
   const handleGenerate = useCallback(() => {
     setIsHidden(true);
     handleFetch();
-    audio.play();
+    handleReadAloud("Who's that Pokemon?");
   }, []);
 
   return (
