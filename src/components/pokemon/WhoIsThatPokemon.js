@@ -21,8 +21,6 @@ synth.onvoiceschanged = getVoices;
 getVoices();
 const utteranceVoice = getUtteranceVoice(voices);
 
-const audio = new Audio('/audio/who-is-that-pokemon.mp3');
-
 const getRandomPokemonNumber = () => Math.floor(Math.random() * MAX_NUMBER_OF_POKEMON);
 
 const getPokeApiEndpointUrl = () => `https://pokeapi.co/api/v2/pokemon/${getRandomPokemonNumber()}`;
@@ -37,7 +35,7 @@ const WhoIsThatPokemon = () => {
 
   useEffect(() => {
     handleFetch();
-    audio.play();
+    handleReadAloud("Who's that Pokemon?");
   }, []);
 
   const handleFetch = () => {
@@ -64,7 +62,7 @@ const WhoIsThatPokemon = () => {
   const handleGenerate = useCallback(() => {
     setIsHidden(true);
     handleFetch();
-    audio.play();
+    handleReadAloud("Who's that Pokemon?");
   }, []);
 
   return (
