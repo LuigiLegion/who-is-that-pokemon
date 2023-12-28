@@ -72,16 +72,18 @@ const WhoIsThatPokemon = () => {
 
       <div>
         <img
-          className={isHidden ? 'silhouette' : ''}
+          className={isHidden ? 'sprite silhouette' : 'sprite'}
           src={sprite}
           alt={name}
           onClick={handleReveal}
         />
-
-        {!isHidden && <h2>It's... {name}!</h2>}
       </div>
 
+      <button onClick={handleReveal}>REVEAL</button>
+
       <button onClick={handleGenerate}>GENERATE</button>
+
+      {!isHidden && <h2>It's... {name}!</h2>}
     </div>
   );
 };

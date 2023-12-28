@@ -12,8 +12,17 @@ code {
     monospace;
 }
 
+button {
+  margin: 20px;
+}
+
 .App {
   text-align: center;
+}
+
+.sprite {
+  height: 40vh;
+  width: 40vh;
 }
 
 .silhouette {
