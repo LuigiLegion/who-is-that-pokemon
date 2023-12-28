@@ -72,7 +72,7 @@ const WhoIsThatPokemon = () => {
 
       <div>
         <img
-          className={isHidden ? 'silhouette' : ''}
+          className={isHidden ? 'sprite silhouette' : 'sprite'}
           src={sprite}
           alt={name}
           onClick={handleReveal}
