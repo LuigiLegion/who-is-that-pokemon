@@ -77,11 +77,11 @@ const WhoIsThatPokemon = () => {
           alt={name}
           onClick={handleReveal}
         />
-
-        {!isHidden && <h2>It's... {name}!</h2>}
       </div>
 
       <button onClick={handleGenerate}>GENERATE</button>
+
+      {!isHidden && <h2>It's... {name}!</h2>}
     </div>
   );
 };
