@@ -79,6 +79,8 @@ const WhoIsThatPokemon = () => {
         />
       </div>
 
+      <button onClick={handleReveal}>REVEAL</button>
+
       <button onClick={handleGenerate}>GENERATE</button>
 
       {!isHidden && <h2>It's... {name}!</h2>}
