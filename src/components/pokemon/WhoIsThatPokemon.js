@@ -22,7 +22,7 @@ synth.onvoiceschanged = getVoices;
 getVoices();
 const utteranceVoice = getUtteranceVoice(voices);
 
-const getRandomPokemonNumber = () => Math.floor(Math.random() * MAX_NUMBER_OF_POKEMON);
+const getRandomPokemonNumber = () => Math.floor(Math.random() * MAX_NUMBER_OF_POKEMON) + 1;
 
 const getPokeApiEndpointUrl = () => `https://pokeapi.co/api/v2/pokemon/${getRandomPokemonNumber()}`;
 
