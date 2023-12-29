@@ -30,21 +30,33 @@ const capitalizeFirstLetter = word => word[0].toUpperCase() + word.slice(1);
 
 // Components
 const WhoIsThatPokemon = () => {
+  const [mode, setMode] = useState('trainer');
   const [sprite, setSprite] = useState('');
-  const [name, setName] = useState('');
   const [isHidden, setIsHidden] = useState(true);
+  const [name, setName] = useState('');
+  const [guess, setGuess] = useState('');
 
   useEffect(() => {
     handleFetch();
     handleReadAloud(WHO_IS_THAT_POKEMON);
   }, []);
 
+  useEffect(() => {
+    if (guess && name && guess === name) {
+      handleReveal();
+    }
+  }, [guess, name]);
+
+  const handleMode = event => {
+    setMode(event.target.value);
+  };
+
   const handleFetch = () => {
     fetch(getPokeApiEndpointUrl())
       .then(response => response.json())
       .then(data => {
         setSprite(data.sprites.front_default);
-        setName(capitalizeFirstLetter(data.name));
+        setName(data.name);
       })
       .catch(error => console.error(error.message));
   };
@@ -52,6 +64,7 @@ const WhoIsThatPokemon = () => {
   const handleReadAloud = string => {
     const utterance = new SpeechSynthesisUtterance(string);
     utterance.voice = utteranceVoice;
+
     synth.speak(utterance);
   };
 
@@ -61,13 +74,48 @@ const WhoIsThatPokemon = () => {
   };
 
   const handleGenerate = useCallback(() => {
+    setGuess('');
     setIsHidden(true);
     handleFetch();
     handleReadAloud(WHO_IS_THAT_POKEMON);
   }, []);
 
+  const handleGuess = event => {
+    setGuess(event.target.value.toLowerCase());
+  };
+
   return (
     <div>
+      <form>
+        <fieldset>
+          <legend>Please select your preferred game mode</legend>
+
+          <div>
+            <input
+              type="radio"
+              id="trainerMode"
+              name="mode"
+              value="trainer"
+              checked={mode === 'trainer'}
+              onChange={handleMode}
+            />
+
+            <label htmlFor="trainerMode">Trainer</label>
+
+            <input
+              type="radio"
+              id="masterMode"
+              name="mode"
+              value="master"
+              checked={mode === 'master'}
+              onChange={handleMode}
+            />
+
+            <label htmlFor="masterMode">Master</label>
+          </div>
+        </fieldset>
+      </form>
+
       <h1>Who's that Pokemon?</h1>
 
       <div>
@@ -83,7 +131,22 @@ const WhoIsThatPokemon = () => {
 
       <button onClick={handleGenerate}>GENERATE</button>
 
-      {!isHidden && <h2>It's... {name}!</h2>}
+      {mode === 'master' &&
+        <form>
+          <div>
+            <input
+              type="text"
+              id="guess"
+              name="guess"
+              value={guess}
+              disabled={guess === name}
+              onChange={handleGuess}
+            ></input>
+          </div>
+        </form>
+      }
+
+      {!isHidden && name && <h2>It's... {capitalizeFirstLetter(name)}!</h2>}
     </div>
   );
 };
