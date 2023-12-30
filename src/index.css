@@ -34,6 +34,10 @@ code {
     monospace;
 }
 
+label {
+  margin-right: 10px;
+}
+
 button {
   margin: 20px;
 }
