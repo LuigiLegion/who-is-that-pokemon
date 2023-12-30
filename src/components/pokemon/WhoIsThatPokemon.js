@@ -30,6 +30,7 @@ const capitalizeFirstLetter = word => word[0].toUpperCase() + word.slice(1);
 
 // Components
 const WhoIsThatPokemon = () => {
+  const [isMuted, setIsMuted] = useState(false);
   const [mode, setMode] = useState('trainer');
   const [gen, setGen] = useState('I-IX');
   const [sprite, setSprite] = useState('');
@@ -39,7 +40,7 @@ const WhoIsThatPokemon = () => {
 
   useEffect(() => {
     handleFetch(gen);
-    handleReadAloud(WHO_IS_THAT_POKEMON);
+    handleReadAloud(WHO_IS_THAT_POKEMON, isMuted);
   }, []);
 
   useEffect(() => {
@@ -47,6 +48,10 @@ const WhoIsThatPokemon = () => {
       handleReveal();
     }
   }, [guess, name]);
+
+  const handleIsMuted = event => {
+    setIsMuted(event.target.value === 'true');
+  };
 
   const handleMode = event => {
     setMode(event.target.value);
@@ -66,23 +71,25 @@ const WhoIsThatPokemon = () => {
       .catch(error => console.error(error.message));
   };
 
-  const handleReadAloud = string => {
-    const utterance = new SpeechSynthesisUtterance(string);
+  const handleReadAloud = (text, isMuted) => {
+    const utterance = new SpeechSynthesisUtterance(text);
     utterance.voice = utteranceVoice;
 
-    synth.speak(utterance);
+    if (!isMuted) {
+      synth.speak(utterance);
+    }
   };
 
   const handleReveal = () => {
     setIsHidden(false);
-    handleReadAloud(`It's... ${name}!`);
+    handleReadAloud(`It's... ${name}!`, isMuted);
   };
 
-  const handleGenerate = useCallback(gen => {
+  const handleGenerate = useCallback((gen, isMuted) => {
     setGuess('');
     setIsHidden(true);
     handleFetch(gen);
-    handleReadAloud(WHO_IS_THAT_POKEMON);
+    handleReadAloud(WHO_IS_THAT_POKEMON, isMuted);
   }, []);
 
   const handleGuess = event => {
@@ -93,30 +100,58 @@ const WhoIsThatPokemon = () => {
     <div>
       <form>
         <fieldset>
+          <legend>Select your preferred audio setting</legend>
+
+          <div>
+            <input
+              type="radio"
+              id="on"
+              name="isMuted"
+              value="false"
+              checked={!isMuted}
+              onChange={handleIsMuted}
+            />
+
+            <label htmlFor="on">On</label>
+
+            <input
+              type="radio"
+              id="off"
+              name="isMuted"
+              value="true"
+              checked={isMuted}
+              onChange={handleIsMuted}
+            />
+
+            <label htmlFor="off">Off</label>
+          </div>
+        </fieldset>
+
+        <fieldset>
           <legend>Select your preferred game mode</legend>
 
           <div>
             <input
               type="radio"
-              id="trainerMode"
+              id="trainer"
               name="mode"
               value="trainer"
               checked={mode === 'trainer'}
               onChange={handleMode}
             />
 
-            <label htmlFor="trainerMode">Trainer</label>
+            <label htmlFor="trainer">Trainer</label>
 
             <input
               type="radio"
-              id="masterMode"
+              id="master"
               name="mode"
               value="master"
               checked={mode === 'master'}
               onChange={handleMode}
             />
 
-            <label htmlFor="masterMode">Master</label>
+            <label htmlFor="master">Master</label>
           </div>
         </fieldset>
 
@@ -163,7 +198,7 @@ const WhoIsThatPokemon = () => {
 
       <button onClick={handleReveal}>REVEAL</button>
 
-      <button onClick={() => handleGenerate(gen)}>GENERATE</button>
+      <button onClick={() => handleGenerate(gen, isMuted)}>GENERATE</button>
 
       {mode === 'master' &&
         <form>
