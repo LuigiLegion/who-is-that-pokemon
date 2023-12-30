@@ -88,7 +88,7 @@ const WhoIsThatPokemon = () => {
     <div>
       <form>
         <fieldset>
-          <legend>Please select your preferred game mode</legend>
+          <legend>Select your preferred game mode</legend>
 
           <div>
             <input
@@ -139,7 +139,7 @@ const WhoIsThatPokemon = () => {
               id="guess"
               name="guess"
               value={guess}
-              disabled={guess === name}
+              disabled={!isHidden || guess === name}
               onChange={handleGuess}
             ></input>
           </div>
