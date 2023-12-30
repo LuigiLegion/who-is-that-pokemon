@@ -1,11 +1,11 @@
 // Imports
 import { useState, useEffect, useCallback } from 'react';
+import pokemonNumberRangesByGen from '../../data/pokemon-number-ranges-by-gen.json';
 
 // Initializations
 const VOICE_URI_IOS = 'Samantha';
 const VOICE_URI_NON_IOS = 'Zira';
 const WHO_IS_THAT_POKEMON = "Who's that Pokemon?";
-const MAX_NUMBER_OF_POKEMON = 1010;
 
 const synth = window.speechSynthesis;
 let voices;
@@ -22,22 +22,23 @@ synth.onvoiceschanged = getVoices;
 getVoices();
 const utteranceVoice = getUtteranceVoice(voices);
 
-const getRandomPokemonNumber = () => Math.floor(Math.random() * MAX_NUMBER_OF_POKEMON) + 1;
+const getRandomPokemonNumber = ({ min, max }) => Math.floor(Math.random() * (max - min) + min);
 
-const getPokeApiEndpointUrl = () => `https://pokeapi.co/api/v2/pokemon/${getRandomPokemonNumber()}`;
+const getPokeApiEndpointUrl = gen => `https://pokeapi.co/api/v2/pokemon/${getRandomPokemonNumber(pokemonNumberRangesByGen[gen])}`;
 
 const capitalizeFirstLetter = word => word[0].toUpperCase() + word.slice(1);
 
 // Components
 const WhoIsThatPokemon = () => {
   const [mode, setMode] = useState('trainer');
+  const [gen, setGen] = useState('I-IX');
   const [sprite, setSprite] = useState('');
   const [isHidden, setIsHidden] = useState(true);
   const [name, setName] = useState('');
   const [guess, setGuess] = useState('');
 
   useEffect(() => {
-    handleFetch();
+    handleFetch(gen);
     handleReadAloud(WHO_IS_THAT_POKEMON);
   }, []);
 
@@ -51,8 +52,12 @@ const WhoIsThatPokemon = () => {
     setMode(event.target.value);
   };
 
-  const handleFetch = () => {
-    fetch(getPokeApiEndpointUrl())
+  const handleGen = event => {
+    setGen(event.target.value);
+  };
+
+  const handleFetch = gen => {
+    fetch(getPokeApiEndpointUrl(gen))
       .then(response => response.json())
       .then(data => {
         setSprite(data.sprites.front_default);
@@ -73,10 +78,10 @@ const WhoIsThatPokemon = () => {
     handleReadAloud(`It's... ${name}!`);
   };
 
-  const handleGenerate = useCallback(() => {
+  const handleGenerate = useCallback(gen => {
     setGuess('');
     setIsHidden(true);
-    handleFetch();
+    handleFetch(gen);
     handleReadAloud(WHO_IS_THAT_POKEMON);
   }, []);
 
@@ -114,6 +119,35 @@ const WhoIsThatPokemon = () => {
             <label htmlFor="masterMode">Master</label>
           </div>
         </fieldset>
+
+        <fieldset>
+          <legend>Select your preferred generation</legend>
+
+          <div>
+            <select
+              id="gen"
+              onChange={handleGen}
+            >
+              <option value="I-IX">Gens I-IX</option>
+              <option value="I-VIII">Gens I-VIII</option>
+              <option value="I-VII">Gens I-VII</option>
+              <option value="I-VI">Gens I-VI</option>
+              <option value="I-V">Gens I-V</option>
+              <option value="I-IV">Gens I-IV</option>
+              <option value="I-III">Gens I-III</option>
+              <option value="I-II">Gens I-II</option>
+              <option value="I">Gen I</option>
+              <option value="II">Gen II</option>
+              <option value="III">Gen III</option>
+              <option value="IV">Gen IV</option>
+              <option value="V">Gen V</option>
+              <option value="VI">Gen VI</option>
+              <option value="VII">Gen VII</option>
+              <option value="VIII">Gen VIII</option>
+              <option value="IX">Gen IX</option>
+            </select>
+          </div>
+        </fieldset>
       </form>
 
       <h1>Who's that Pokemon?</h1>
@@ -129,20 +163,24 @@ const WhoIsThatPokemon = () => {
 
       <button onClick={handleReveal}>REVEAL</button>
 
-      <button onClick={handleGenerate}>GENERATE</button>
+      <button onClick={() => handleGenerate(gen)}>GENERATE</button>
 
       {mode === 'master' &&
         <form>
-          <div>
-            <input
-              type="text"
-              id="guess"
-              name="guess"
-              value={guess}
-              disabled={!isHidden || guess === name}
-              onChange={handleGuess}
-            ></input>
-          </div>
+          <fieldset>
+            <legend>Guess the Pokemon</legend>
+
+            <div>
+              <input
+                type="text"
+                id="guess"
+                name="guess"
+                value={guess}
+                disabled={!isHidden || guess === name}
+                onChange={handleGuess}
+              ></input>
+            </div>
+          </fieldset>
         </form>
       }
 
