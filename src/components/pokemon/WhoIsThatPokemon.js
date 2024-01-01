@@ -203,7 +203,7 @@ const WhoIsThatPokemon = () => {
       {mode === 'master' &&
         <form>
           <fieldset>
-            <legend>Guess the Pokemon</legend>
+            <legend>GUESS</legend>
 
             <div>
               <input
