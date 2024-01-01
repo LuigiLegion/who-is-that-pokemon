@@ -100,7 +100,7 @@ const WhoIsThatPokemon = () => {
     <div>
       <form>
         <fieldset>
-          <legend>Select your preferred audio setting</legend>
+          <legend>AUDIO</legend>
 
           <div>
             <input
@@ -128,7 +128,7 @@ const WhoIsThatPokemon = () => {
         </fieldset>
 
         <fieldset>
-          <legend>Select your preferred game mode</legend>
+          <legend>MODE</legend>
 
           <div>
             <input
@@ -156,7 +156,7 @@ const WhoIsThatPokemon = () => {
         </fieldset>
 
         <fieldset>
-          <legend>Select your preferred generation</legend>
+          <legend>GENERATION</legend>
 
           <div>
             <select
@@ -203,7 +203,7 @@ const WhoIsThatPokemon = () => {
       {mode === 'master' &&
         <form>
           <fieldset>
-            <legend>Guess the Pokemon</legend>
+            <legend>GUESS</legend>
 
             <div>
               <input
