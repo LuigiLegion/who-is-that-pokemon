@@ -98,92 +98,96 @@ const WhoIsThatPokemon = () => {
 
   return (
     <div>
-      <form>
-        <fieldset>
-          <legend>AUDIO</legend>
+      <details>
+        <summary>SETTINGS</summary>
 
-          <div>
-            <input
-              type="radio"
-              id="on"
-              name="isMuted"
-              value="false"
-              checked={!isMuted}
-              onChange={handleIsMuted}
-            />
+        <form>
+          <fieldset>
+            <legend>AUDIO</legend>
 
-            <label htmlFor="on">On</label>
+            <div>
+              <input
+                type="radio"
+                id="on"
+                name="isMuted"
+                value="false"
+                checked={!isMuted}
+                onChange={handleIsMuted}
+              />
 
-            <input
-              type="radio"
-              id="off"
-              name="isMuted"
-              value="true"
-              checked={isMuted}
-              onChange={handleIsMuted}
-            />
+              <label htmlFor="on">On</label>
 
-            <label htmlFor="off">Off</label>
-          </div>
-        </fieldset>
+              <input
+                type="radio"
+                id="off"
+                name="isMuted"
+                value="true"
+                checked={isMuted}
+                onChange={handleIsMuted}
+              />
 
-        <fieldset>
-          <legend>MODE</legend>
+              <label htmlFor="off">Off</label>
+            </div>
+          </fieldset>
 
-          <div>
-            <input
-              type="radio"
-              id="trainer"
-              name="mode"
-              value="trainer"
-              checked={mode === 'trainer'}
-              onChange={handleMode}
-            />
+          <fieldset>
+            <legend>MODE</legend>
 
-            <label htmlFor="trainer">Trainer</label>
+            <div>
+              <input
+                type="radio"
+                id="trainer"
+                name="mode"
+                value="trainer"
+                checked={mode === 'trainer'}
+                onChange={handleMode}
+              />
 
-            <input
-              type="radio"
-              id="master"
-              name="mode"
-              value="master"
-              checked={mode === 'master'}
-              onChange={handleMode}
-            />
+              <label htmlFor="trainer">Trainer</label>
 
-            <label htmlFor="master">Master</label>
-          </div>
-        </fieldset>
+              <input
+                type="radio"
+                id="master"
+                name="mode"
+                value="master"
+                checked={mode === 'master'}
+                onChange={handleMode}
+              />
 
-        <fieldset>
-          <legend>GENERATION</legend>
+              <label htmlFor="master">Master</label>
+            </div>
+          </fieldset>
 
-          <div>
-            <select
-              id="gen"
-              onChange={handleGen}
-            >
-              <option value="I-IX">Gens I-IX</option>
-              <option value="I-VIII">Gens I-VIII</option>
-              <option value="I-VII">Gens I-VII</option>
-              <option value="I-VI">Gens I-VI</option>
-              <option value="I-V">Gens I-V</option>
-              <option value="I-IV">Gens I-IV</option>
-              <option value="I-III">Gens I-III</option>
-              <option value="I-II">Gens I-II</option>
-              <option value="I">Gen I</option>
-              <option value="II">Gen II</option>
-              <option value="III">Gen III</option>
-              <option value="IV">Gen IV</option>
-              <option value="V">Gen V</option>
-              <option value="VI">Gen VI</option>
-              <option value="VII">Gen VII</option>
-              <option value="VIII">Gen VIII</option>
-              <option value="IX">Gen IX</option>
-            </select>
-          </div>
-        </fieldset>
-      </form>
+          <fieldset>
+            <legend>GENERATION</legend>
+
+            <div>
+              <select
+                id="gen"
+                onChange={handleGen}
+              >
+                <option value="I-IX">Gens I-IX</option>
+                <option value="I-VIII">Gens I-VIII</option>
+                <option value="I-VII">Gens I-VII</option>
+                <option value="I-VI">Gens I-VI</option>
+                <option value="I-V">Gens I-V</option>
+                <option value="I-IV">Gens I-IV</option>
+                <option value="I-III">Gens I-III</option>
+                <option value="I-II">Gens I-II</option>
+                <option value="I">Gen I</option>
+                <option value="II">Gen II</option>
+                <option value="III">Gen III</option>
+                <option value="IV">Gen IV</option>
+                <option value="V">Gen V</option>
+                <option value="VI">Gen VI</option>
+                <option value="VII">Gen VII</option>
+                <option value="VIII">Gen VIII</option>
+                <option value="IX">Gen IX</option>
+              </select>
+            </div>
+          </fieldset>
+        </form>
+      </details>
 
       <h1>Who's that Pokemon?</h1>
 
