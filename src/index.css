@@ -34,6 +34,19 @@ code {
     monospace;
 }
 
+.App {
+  margin: 16px;
+}
+
+details[open] summary {
+  margin-bottom: 8px;
+}
+
+h1,
+h2 {
+  margin: 16px;
+}
+
 label {
   margin-right: 10px;
 }
@@ -43,7 +56,7 @@ input {
 }
 
 button {
-  margin: 20px;
+  margin: 16px;
 }
 
 .App {
