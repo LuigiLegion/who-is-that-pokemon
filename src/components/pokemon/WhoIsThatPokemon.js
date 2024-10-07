@@ -30,6 +30,7 @@ const capitalizeFirstLetter = word => word[0].toUpperCase() + word.slice(1);
 
 // Components
 const WhoIsThatPokemon = () => {
+  const [isDark, setIsDark] = useState(false);
   const [isMuted, setIsMuted] = useState(false);
   const [mode, setMode] = useState('trainer');
   const [gen, setGen] = useState('I-IX');
@@ -48,6 +49,11 @@ const WhoIsThatPokemon = () => {
       handleReveal();
     }
   }, [guess, name]);
+
+  const handleIsDark = event => {
+    setIsDark(event.target.value === 'true');
+    document.body.classList.toggle('dark-theme');
+  };
 
   const handleIsMuted = event => {
     setIsMuted(event.target.value === 'true');
@@ -102,6 +108,34 @@ const WhoIsThatPokemon = () => {
         <summary>SETTINGS</summary>
 
         <form>
+          <fieldset>
+            <legend>THEME</legend>
+
+            <div>
+              <input
+                type="radio"
+                id="light"
+                name="isDark"
+                value="false"
+                checked={!isDark}
+                onChange={handleIsDark}
+              />
+
+              <label htmlFor="light">Light</label>
+
+              <input
+                type="radio"
+                id="dark"
+                name="isDark"
+                value="true"
+                checked={isDark}
+                onChange={handleIsDark}
+              />
+
+              <label htmlFor="dark">Dark</label>
+            </div>
+          </fieldset>
+
           <fieldset>
             <legend>AUDIO</legend>
 
