@@ -11,10 +11,10 @@ body {
     sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  color: #444444;
+  color: var(--text-color-primary);
   background-size: 100%;
   background-position: bottom;
-  background-color: #eeeeee;
+  background-color: var(--background-color-primary);
 }
 
 body::-webkit-scrollbar {
@@ -22,11 +22,11 @@ body::-webkit-scrollbar {
 }
 
 body::-webkit-scrollbar-track {
-  background: #dddddd;
+  background: var(--scrollbar-track-color);
 }
 
 body::-webkit-scrollbar-thumb {
-  background: #333333;
+  background: var(--scrollbar-thumb-color);
 }
 
 code {
@@ -69,5 +69,5 @@ button {
 }
 
 .silhouette {
-  filter: contrast(0%) brightness(0%);
+  filter: contrast(0%) brightness(var(--silhouette-brightness-ratio));
 }
