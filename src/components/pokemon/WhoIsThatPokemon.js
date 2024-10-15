@@ -40,6 +40,7 @@ const WhoIsThatPokemon = () => {
   const [guess, setGuess] = useState('');
 
   useEffect(() => {
+    handleIsDarkOnLoad()
     handleFetch(gen);
     handleReadAloud(WHO_IS_THAT_POKEMON, isMuted);
   }, []);
@@ -56,6 +57,18 @@ const WhoIsThatPokemon = () => {
     setIsDark(isDarkTheme);
     localStorage.setItem('isDarkTheme', isDarkTheme);
     document.body.classList.toggle('dark-theme');
+  };
+
+  const handleIsDarkOnLoad = () => {
+    const isDarkTheme = localStorage.getItem('isDarkTheme') === 'true';
+
+    setIsDark(isDarkTheme);
+
+    if (isDarkTheme) {
+      document.body.classList.add('dark-theme');
+    } else {
+      document.body.classList.remove('dark-mode');
+    }
   };
 
   const handleIsMuted = event => {
