@@ -22,6 +22,8 @@ synth.onvoiceschanged = getVoices;
 getVoices();
 const utteranceVoice = getUtteranceVoice(voices);
 
+const isStringOfTrue = value => value === 'true';
+
 const getRandomPokemonNumber = ({ min, max }) => Math.floor(Math.random() * (max - min) + min);
 
 const getPokeApiEndpointUrl = gen => `https://pokeapi.co/api/v2/pokemon/${getRandomPokemonNumber(pokemonNumberRangesByGen[gen])}`;
@@ -40,6 +42,7 @@ const WhoIsThatPokemon = () => {
   const [guess, setGuess] = useState('');
 
   useEffect(() => {
+    handleIsDarkOnLoad()
     handleFetch(gen);
     handleReadAloud(WHO_IS_THAT_POKEMON, isMuted);
   }, []);
@@ -51,12 +54,27 @@ const WhoIsThatPokemon = () => {
   }, [guess, name]);
 
   const handleIsDark = event => {
-    setIsDark(event.target.value === 'true');
+    const isDarkTheme = isStringOfTrue(event.target.value);
+
+    setIsDark(isDarkTheme);
+    localStorage.setItem('isDarkTheme', isDarkTheme);
     document.body.classList.toggle('dark-theme');
   };
 
+  const handleIsDarkOnLoad = () => {
+    const isDarkTheme = isStringOfTrue(localStorage.getItem('isDarkTheme'));
+
+    setIsDark(isDarkTheme);
+
+    if (isDarkTheme) {
+      document.body.classList.add('dark-theme');
+    } else {
+      document.body.classList.remove('dark-mode');
+    }
+  };
+
   const handleIsMuted = event => {
-    setIsMuted(event.target.value === 'true');
+    setIsMuted(isStringOfTrue(event.target.value));
   };
 
   const handleMode = event => {
