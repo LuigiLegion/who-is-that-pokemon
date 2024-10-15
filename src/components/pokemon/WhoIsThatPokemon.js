@@ -22,6 +22,8 @@ synth.onvoiceschanged = getVoices;
 getVoices();
 const utteranceVoice = getUtteranceVoice(voices);
 
+const isStringOfTrue = value => value === 'true';
+
 const getRandomPokemonNumber = ({ min, max }) => Math.floor(Math.random() * (max - min) + min);
 
 const getPokeApiEndpointUrl = gen => `https://pokeapi.co/api/v2/pokemon/${getRandomPokemonNumber(pokemonNumberRangesByGen[gen])}`;
@@ -52,7 +54,7 @@ const WhoIsThatPokemon = () => {
   }, [guess, name]);
 
   const handleIsDark = event => {
-    const isDarkTheme = event.target.value === 'true';
+    const isDarkTheme = isStringOfTrue(event.target.value);
 
     setIsDark(isDarkTheme);
     localStorage.setItem('isDarkTheme', isDarkTheme);
@@ -60,7 +62,7 @@ const WhoIsThatPokemon = () => {
   };
 
   const handleIsDarkOnLoad = () => {
-    const isDarkTheme = localStorage.getItem('isDarkTheme') === 'true';
+    const isDarkTheme = isStringOfTrue(localStorage.getItem('isDarkTheme'));
 
     setIsDark(isDarkTheme);
 
@@ -72,7 +74,7 @@ const WhoIsThatPokemon = () => {
   };
 
   const handleIsMuted = event => {
-    setIsMuted(event.target.value === 'true');
+    setIsMuted(isStringOfTrue(event.target.value));
   };
 
   const handleMode = event => {
