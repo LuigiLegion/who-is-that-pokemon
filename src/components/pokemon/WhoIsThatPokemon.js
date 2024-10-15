@@ -51,7 +51,10 @@ const WhoIsThatPokemon = () => {
   }, [guess, name]);
 
   const handleIsDark = event => {
-    setIsDark(event.target.value === 'true');
+    const isDarkTheme = event.target.value === 'true';
+
+    setIsDark(isDarkTheme);
+    localStorage.setItem('isDarkTheme', isDarkTheme);
     document.body.classList.toggle('dark-theme');
   };
 
