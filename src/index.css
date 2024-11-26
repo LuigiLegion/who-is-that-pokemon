@@ -35,6 +35,7 @@ code {
 }
 
 .App {
+  text-align: center;
   margin: 16px;
 }
 
@@ -59,15 +60,13 @@ button {
   margin: 16px;
 }
 
-.App {
-  text-align: center;
+.silhouette {
+  filter: contrast(0%) brightness(var(--silhouette-brightness-ratio));
 }
 
+.preloader,
+.silhouette,
 .sprite {
   height: 40vh;
   width: 40vh;
-}
-
-.silhouette {
-  filter: contrast(0%) brightness(var(--silhouette-brightness-ratio));
 }

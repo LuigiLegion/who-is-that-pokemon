@@ -1,5 +1,5 @@
 // Imports
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect } from 'react';
 import pokemonNumberRangesByGen from '../../data/pokemon-number-ranges-by-gen.json';
 
 // Initializations
@@ -32,26 +32,29 @@ const capitalizeFirstLetter = word => word[0].toUpperCase() + word.slice(1);
 
 // Components
 const WhoIsThatPokemon = () => {
-  const [isDark, setIsDark] = useState(false);
-  const [isMuted, setIsMuted] = useState(false);
-  const [mode, setMode] = useState('trainer');
   const [gen, setGen] = useState('I-IX');
+  const [mode, setMode] = useState('trainer');
   const [sprite, setSprite] = useState('');
-  const [isHidden, setIsHidden] = useState(true);
   const [name, setName] = useState('');
   const [guess, setGuess] = useState('');
+  const [isDark, setIsDark] = useState(false);
+  const [isMuted, setIsMuted] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
+  const [isHidden, setIsHidden] = useState(true);
 
   useEffect(() => {
-    handleIsDarkOnLoad()
-    handleFetch(gen);
-    handleReadAloud(WHO_IS_THAT_POKEMON, isMuted);
+    handleIsDarkOnInitialLoad();
+
+    const handleGenerateOnInitialLoad = async () => await handleGenerate();
+
+    handleGenerateOnInitialLoad();
   }, []);
 
   useEffect(() => {
     if (guess && name && guess === name) {
       handleReveal();
     }
-  }, [guess, name]);
+  }, [guess]);
 
   const handleIsDark = event => {
     const isDarkTheme = isStringOfTrue(event.target.value);
@@ -61,7 +64,7 @@ const WhoIsThatPokemon = () => {
     document.body.classList.toggle('dark-theme');
   };
 
-  const handleIsDarkOnLoad = () => {
+  const handleIsDarkOnInitialLoad = () => {
     const isDarkTheme = isStringOfTrue(localStorage.getItem('isDarkTheme'));
 
     setIsDark(isDarkTheme);
@@ -85,39 +88,44 @@ const WhoIsThatPokemon = () => {
     setGen(event.target.value);
   };
 
-  const handleFetch = gen => {
-    fetch(getPokeApiEndpointUrl(gen))
-      .then(response => response.json())
-      .then(data => {
-        setSprite(data.sprites.front_default);
-        setName(data.name);
-      })
-      .catch(error => console.error(error.message));
-  };
+  const handleFetch = async () => await fetch(getPokeApiEndpointUrl(gen))
+    .then(response => response.json())
+    .catch(error => console.error(error.message));
 
-  const handleReadAloud = (text, isMuted) => {
-    const utterance = new SpeechSynthesisUtterance(text);
-    utterance.voice = utteranceVoice;
-
+  const readAloud = text => {
     if (!isMuted) {
+      const utterance = new SpeechSynthesisUtterance(text);
+      utterance.voice = utteranceVoice;
+
       synth.speak(utterance);
     }
   };
 
-  const handleReveal = () => {
-    setIsHidden(false);
-    handleReadAloud(`It's... ${name}!`, isMuted);
-  };
-
-  const handleGenerate = useCallback((gen, isMuted) => {
+  const handleGenerate = async () => {
+    setIsLoading(true);
+    setSprite('');
+    setName('');
     setGuess('');
     setIsHidden(true);
-    handleFetch(gen);
-    handleReadAloud(WHO_IS_THAT_POKEMON, isMuted);
-  }, []);
+
+    const data = await handleFetch(gen);
+
+    setSprite(data.sprites.front_default);
+    setName(data.name);
+    setIsLoading(false);
+    readAloud(WHO_IS_THAT_POKEMON);
+  };
 
   const handleGuess = event => {
     setGuess(event.target.value.toLowerCase());
+  };
+
+  const handleReveal = () => {
+    if (isHidden) {
+      setIsHidden(false);
+    }
+
+    readAloud(`It's... ${name}!`);
   };
 
   return (
@@ -244,17 +252,27 @@ const WhoIsThatPokemon = () => {
       <h1>Who's that Pokemon?</h1>
 
       <div>
-        <img
-          className={isHidden ? 'sprite silhouette' : 'sprite'}
-          src={sprite}
-          alt={name}
-          onClick={handleReveal}
-        />
+        {
+          isLoading && <img
+            className="preloader"
+            src={`${process.env.PUBLIC_URL}/images/preloader.gif`}
+            alt="preloader"
+          />
+        }
+
+        {
+          sprite && <img
+            className={isHidden ? 'silhouette' : 'sprite'}
+            src={sprite}
+            alt={isHidden ? 'silhouette' : 'sprite'}
+            onClick={handleReveal}
+          />
+        }
       </div>
 
       <button onClick={handleReveal}>REVEAL</button>
 
-      <button onClick={() => handleGenerate(gen, isMuted)}>GENERATE</button>
+      <button onClick={handleGenerate}>GENERATE</button>
 
       {mode === 'master' &&
         <form>
