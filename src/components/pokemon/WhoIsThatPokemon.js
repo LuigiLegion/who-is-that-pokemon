@@ -32,15 +32,15 @@ const capitalizeFirstLetter = word => word[0].toUpperCase() + word.slice(1);
 
 // Components
 const WhoIsThatPokemon = () => {
-  const [gen, setGen] = useState('I-IX');
-  const [mode, setMode] = useState('trainer');
+  const [isDark, setIsDark] = useState(false);
+  const [isMuted, setIsMuted] = useState(false);
+  const [isMaster, setIsMaster] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
+  const [isHidden, setIsHidden] = useState(true);
   const [sprite, setSprite] = useState('');
   const [name, setName] = useState('');
   const [guess, setGuess] = useState('');
-  const [isDark, setIsDark] = useState(false);
-  const [isMuted, setIsMuted] = useState(false);
-  const [isLoading, setIsLoading] = useState(true);
-  const [isHidden, setIsHidden] = useState(true);
+  const [gen, setGen] = useState('I-IX');
 
   useEffect(() => {
     handleIsDarkOnInitialLoad();
@@ -80,8 +80,8 @@ const WhoIsThatPokemon = () => {
     setIsMuted(isStringOfTrue(event.target.value));
   };
 
-  const handleMode = event => {
-    setMode(event.target.value);
+  const handleIsMaster = event => {
+    setIsMaster(isStringOfTrue(event.target.value));
   };
 
   const handleGen = event => {
@@ -197,10 +197,10 @@ const WhoIsThatPokemon = () => {
               <input
                 type="radio"
                 id="trainer"
-                name="mode"
-                value="trainer"
-                checked={mode === 'trainer'}
-                onChange={handleMode}
+                name="isMaster"
+                value="false"
+                checked={!isMaster}
+                onChange={handleIsMaster}
               />
 
               <label htmlFor="trainer">Trainer</label>
@@ -208,10 +208,10 @@ const WhoIsThatPokemon = () => {
               <input
                 type="radio"
                 id="master"
-                name="mode"
-                value="master"
-                checked={mode === 'master'}
-                onChange={handleMode}
+                name="isMaster"
+                value="true"
+                checked={isMaster}
+                onChange={handleIsMaster}
               />
 
               <label htmlFor="master">Master</label>
@@ -274,7 +274,7 @@ const WhoIsThatPokemon = () => {
 
       <button onClick={handleGenerate}>GENERATE</button>
 
-      {mode === 'master' &&
+      {isMaster &&
         <form>
           <fieldset>
             <legend>GUESS</legend>
