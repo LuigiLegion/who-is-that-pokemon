@@ -3,6 +3,7 @@ import { useState, useEffect } from 'react';
 import pokemonNumberRangesByGen from '../../data/pokemon-number-ranges-by-gen.json';
 
 // Initializations
+const GENS = Object.keys(pokemonNumberRangesByGen);
 const VOICE_URI_IOS = 'Samantha';
 const VOICE_URI_NON_IOS = 'Zira';
 const WHO_IS_THAT_POKEMON = "Who's that Pokemon?";
@@ -32,21 +33,20 @@ const capitalizeFirstLetter = word => word[0].toUpperCase() + word.slice(1);
 
 // Components
 const WhoIsThatPokemon = () => {
-  const [gen, setGen] = useState('I-IX');
-  const [mode, setMode] = useState('trainer');
+  const [isDark, setIsDark] = useState(isStringOfTrue(localStorage.getItem('isDark')));
+  const [isMuted, setIsMuted] = useState(isStringOfTrue(localStorage.getItem('isMuted') || 'true'));
+  const [isMaster, setIsMaster] = useState(isStringOfTrue(localStorage.getItem('isMaster') || 'true'));
+  const [gen, setGen] = useState(localStorage.getItem('gen') || 'I-IX');
+  const [isLoading, setIsLoading] = useState(true);
+  const [isHidden, setIsHidden] = useState(true);
   const [sprite, setSprite] = useState('');
   const [name, setName] = useState('');
   const [guess, setGuess] = useState('');
-  const [isDark, setIsDark] = useState(false);
-  const [isMuted, setIsMuted] = useState(false);
-  const [isLoading, setIsLoading] = useState(true);
-  const [isHidden, setIsHidden] = useState(true);
 
   useEffect(() => {
-    handleIsDarkOnInitialLoad();
-
     const handleGenerateOnInitialLoad = async () => await handleGenerate();
 
+    loadIsDark();
     handleGenerateOnInitialLoad();
   }, []);
 
@@ -56,36 +56,41 @@ const WhoIsThatPokemon = () => {
     }
   }, [guess]);
 
-  const handleIsDark = event => {
-    const isDarkTheme = isStringOfTrue(event.target.value);
-
-    setIsDark(isDarkTheme);
-    localStorage.setItem('isDarkTheme', isDarkTheme);
-    document.body.classList.toggle('dark-theme');
-  };
-
-  const handleIsDarkOnInitialLoad = () => {
-    const isDarkTheme = isStringOfTrue(localStorage.getItem('isDarkTheme'));
-
-    setIsDark(isDarkTheme);
-
-    if (isDarkTheme) {
+  const loadIsDark = () => {
+    if (isDark) {
       document.body.classList.add('dark-theme');
     } else {
       document.body.classList.remove('dark-mode');
     }
   };
 
-  const handleIsMuted = event => {
-    setIsMuted(isStringOfTrue(event.target.value));
+  const handleIsDark = event => {
+    const selectedIsDark = isStringOfTrue(event.target.value);
+
+    setIsDark(selectedIsDark);
+    localStorage.setItem('isDark', selectedIsDark);
+    document.body.classList.toggle('dark-theme');
   };
 
-  const handleMode = event => {
-    setMode(event.target.value);
+  const handleIsMuted = event => {
+    const selectedIsMuted = isStringOfTrue(event.target.value);
+
+    setIsMuted(selectedIsMuted);
+    localStorage.setItem('isMuted', selectedIsMuted);
+  };
+
+  const handleIsMaster = event => {
+    const selectedIsMaster = isStringOfTrue(event.target.value);
+
+    setIsMaster(selectedIsMaster);
+    localStorage.setItem('isMaster', selectedIsMaster);
   };
 
   const handleGen = event => {
-    setGen(event.target.value);
+    const selectedGen = event.target.value;
+
+    setGen(selectedGen);
+    localStorage.setItem('gen', selectedGen);
   };
 
   const handleFetch = async () => await fetch(getPokeApiEndpointUrl(gen))
@@ -168,17 +173,6 @@ const WhoIsThatPokemon = () => {
             <div>
               <input
                 type="radio"
-                id="on"
-                name="isMuted"
-                value="false"
-                checked={!isMuted}
-                onChange={handleIsMuted}
-              />
-
-              <label htmlFor="on">On</label>
-
-              <input
-                type="radio"
                 id="off"
                 name="isMuted"
                 value="true"
@@ -187,6 +181,17 @@ const WhoIsThatPokemon = () => {
               />
 
               <label htmlFor="off">Off</label>
+
+              <input
+                type="radio"
+                id="on"
+                name="isMuted"
+                value="false"
+                checked={!isMuted}
+                onChange={handleIsMuted}
+              />
+
+              <label htmlFor="on">On</label>
             </div>
           </fieldset>
 
@@ -196,25 +201,25 @@ const WhoIsThatPokemon = () => {
             <div>
               <input
                 type="radio"
-                id="trainer"
-                name="mode"
-                value="trainer"
-                checked={mode === 'trainer'}
-                onChange={handleMode}
-              />
-
-              <label htmlFor="trainer">Trainer</label>
-
-              <input
-                type="radio"
                 id="master"
-                name="mode"
-                value="master"
-                checked={mode === 'master'}
-                onChange={handleMode}
+                name="isMaster"
+                value="true"
+                checked={isMaster}
+                onChange={handleIsMaster}
               />
 
               <label htmlFor="master">Master</label>
+
+              <input
+                type="radio"
+                id="trainer"
+                name="isMaster"
+                value="false"
+                checked={!isMaster}
+                onChange={handleIsMaster}
+              />
+
+              <label htmlFor="trainer">Trainer</label>
             </div>
           </fieldset>
 
@@ -224,25 +229,20 @@ const WhoIsThatPokemon = () => {
             <div>
               <select
                 id="gen"
+                title="gen"
+                value={gen}
                 onChange={handleGen}
               >
-                <option value="I-IX">Gens I-IX</option>
-                <option value="I-VIII">Gens I-VIII</option>
-                <option value="I-VII">Gens I-VII</option>
-                <option value="I-VI">Gens I-VI</option>
-                <option value="I-V">Gens I-V</option>
-                <option value="I-IV">Gens I-IV</option>
-                <option value="I-III">Gens I-III</option>
-                <option value="I-II">Gens I-II</option>
-                <option value="I">Gen I</option>
-                <option value="II">Gen II</option>
-                <option value="III">Gen III</option>
-                <option value="IV">Gen IV</option>
-                <option value="V">Gen V</option>
-                <option value="VI">Gen VI</option>
-                <option value="VII">Gen VII</option>
-                <option value="VIII">Gen VIII</option>
-                <option value="IX">Gen IX</option>
+                {
+                  GENS.map(currentGen =>
+                    <option
+                      key={currentGen}
+                      value={currentGen}
+                    >
+                      {currentGen}
+                    </option>
+                  )
+                }
               </select>
             </div>
           </fieldset>
@@ -274,7 +274,7 @@ const WhoIsThatPokemon = () => {
 
       <button onClick={handleGenerate}>GENERATE</button>
 
-      {mode === 'master' &&
+      {isMaster &&
         <form>
           <fieldset>
             <legend>GUESS</legend>
@@ -284,6 +284,8 @@ const WhoIsThatPokemon = () => {
                 type="text"
                 id="guess"
                 name="guess"
+                title="guess"
+                placeholder="Guess away!"
                 value={guess}
                 disabled={!isHidden || guess === name}
                 onChange={handleGuess}
